@@ -1,22 +1,19 @@
 pipeline {
     agent any
-    environment {
-        PYTHON = "C:\\Users\\nextgen\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
-    }
     stages {
         stage('Checkout Code'){
             steps {
-                 checkout scm
+                 git url: 'https://github.com/nafisakhan05/githubjenkinsdemo.git', branch:'main'
             }
         }
-        stage('Install dependencies'){
+        stage('Build image'){
             steps {
-                 bat 'pip install -r requirements.txt'
+                 bat 'docker build -t myimage'
             }
         }
-        stage('Extract data'){
+        stage('Create container'){
             steps {
-                bat "${env.PYTHON} etl.py"
+                bat 'docker run -d -p 8501:8501 myimage'
             }
         }
     }
